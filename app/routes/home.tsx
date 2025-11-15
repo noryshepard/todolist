@@ -28,10 +28,31 @@ export default function Home() {
     setItems(newItems);
   }
 
+  function setItemDescription(index: number, description: string) {
+    const newItems = [...items];
+    newItems[index].description = description;
+    setItems(newItems);
+  }
+
   function toggleDone(index: number) {
     const newItems = [...items];
     newItems[index].done = !newItems[index].done;
     setItems(newItems);
+  }
+
+  function handleInputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    setInputValue(event.currentTarget.value);
+  }
+
+  function handleInputKeyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+    switch (event.key) {
+      case "Enter":
+        !!inputValue.trim() && addItem();
+        break;
+      case "Escape":
+        setInputValue("");
+        break;
+    }
   }
 
   useEffect(() => {
@@ -52,9 +73,18 @@ export default function Home() {
         <ol className="border-b border-gray flex flex-col gap-2 p-3">
           {items.map((item, index) => (
             <li key={`item-${index}`} className="flex justify-between">
-              <span className={`flex-1 ${item.done ? "line-through" : ""}`}>
+              {/* <span className={`flex-1 ${item.done ? "line-through" : ""}`}>
                 {item.description}
-              </span>
+              </span> */}
+              <input
+                className={`flex-1 p-1 ${item.done ? "line-through" : ""}`}
+                type="text"
+                placeholder="Mete aqui cenas..."
+                value={item.description}
+                onChange={(event) =>
+                  setItemDescription(index, event.currentTarget.value)
+                }
+              />
               <button onClick={() => removeItem(index)}>🗑️</button>
               <input
                 className="ml-auto"
@@ -71,9 +101,14 @@ export default function Home() {
             type="text"
             placeholder="Mete aqui cenas..."
             value={inputValue}
-            onChange={(event) => setInputValue(event.currentTarget.value)}
+            onChange={handleInputChange}
+            onKeyDown={handleInputKeyDown}
           />
-          <button className="bg-black text-white px-4" onClick={addItem}>
+          <button
+            className="bg-black text-white px-4 disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={addItem}
+            disabled={!inputValue.trim()}
+          >
             +
           </button>
         </div>
