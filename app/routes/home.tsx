@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Route } from "./+types/home";
 export function meta({}: Route.MetaArgs) {
   return [
@@ -8,10 +8,10 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
-  /** @todo save state using the browser localStorage API */
   const [items, setItems] = useState<{ description: string; done: boolean }[]>(
     []
   );
+
   const [inputValue, setInputValue] = useState("");
 
   function addItem() {
@@ -33,6 +33,17 @@ export default function Home() {
     newItems[index].done = !newItems[index].done;
     setItems(newItems);
   }
+
+  useEffect(() => {
+    if (typeof window == "undefined") return;
+    const savedState = localStorage.getItem("todolist");
+    savedState && setItems(JSON.parse(savedState));
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    localStorage.setItem("todolist", JSON.stringify(items));
+  }, [items]);
 
   return (
     <div className="p-3">
