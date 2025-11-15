@@ -14,7 +14,10 @@ export default function Home() {
   const [inputValue, setInputValue] = useState("");
 
   function addItem() {
-    setItems((s) => [...s, { description: inputValue.trim(), done: false }]);
+    setItems((state) => [
+      ...state,
+      { description: inputValue.trim(), done: false },
+    ]);
     setInputValue("");
   }
 
@@ -35,17 +38,17 @@ export default function Home() {
       <h1 className="text-3xl font-bold text-center mb-3">TO-DO-LIST</h1>
       <div className="border border-gray rounded-lg w-[500px] max-w-full mx-auto overflow-hidden">
         <ol className="border-b border-gray flex flex-col gap-2 p-3">
-          {items.map((item, i) => (
-            <li key={`item-${i}`} className="flex justify-between">
+          {items.map((item, index) => (
+            <li key={`item-${index}`} className="flex justify-between">
               <span className={`flex-1 ${item.done ? "line-through" : ""}`}>
                 {item.description}
               </span>
-              <button onClick={() => removeItem(i)}>🗑️</button>
+              <button onClick={() => removeItem(index)}>🗑️</button>
               <input
                 className="ml-auto"
                 type="checkbox"
                 checked={item.done}
-                onChange={() => toggleDone(i)}
+                onChange={() => toggleDone(index)}
               />
             </li>
           ))}
@@ -56,7 +59,7 @@ export default function Home() {
             type="text"
             placeholder="Mete aqui cenas..."
             value={inputValue}
-            onChange={(e) => setInputValue(e.currentTarget.value)}
+            onChange={(event) => setInputValue(event.currentTarget.value)}
           />
           <button className="bg-black text-white px-4" onClick={addItem}>
             +
