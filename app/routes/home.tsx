@@ -8,6 +8,7 @@ export function meta({}: Route.MetaArgs) {
 }
 
 export default function Home() {
+  /** @todo save state using the browser localStorage API */
   const [items, setItems] = useState<{ description: string; done: boolean }[]>(
     []
   );
